@@ -1,0 +1,33 @@
+@page
+@model VedaInfinity.Web.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Menu"] = "dashboard";
+}
+
+<div class="row g-3 g-xl-4 mb-4">
+    <div class="col-xl-3 col-md-6"><div class="stat-card-modern"><div class="stat-icon icon-green"><i class="bi bi-people-fill"></i></div><div class="stat-value">248</div><div class="stat-label">Total Students</div><div class="stat-change up">+12 this month</div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card-modern"><div class="stat-icon icon-teal"><i class="bi bi-journal-check"></i></div><div class="stat-value">186</div><div class="stat-label">Portfolios Completed</div><div class="stat-change up">75% completed</div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card-modern"><div class="stat-icon icon-orange"><i class="bi bi-hourglass-split"></i></div><div class="stat-value">42</div><div class="stat-label">Drafts Pending</div><div class="stat-change down">Needs attention</div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card-modern"><div class="stat-icon icon-blue"><i class="bi bi-calendar-event"></i></div><div class="stat-value">2026-27</div><div class="stat-label">Current Session</div><div class="stat-change up">Active</div></div></div>
+</div>
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="content-card">
+            <h5 class="card-title mb-3"><i class="bi bi-lightning-charge-fill me-2"></i>Quick Actions</h5>
+            <a class="action-btn" asp-page="/StudentMaster"><div class="act-icon"><i class="bi bi-people-fill"></i></div><div><strong>Student Master</strong><br /><small>View, add or edit student records</small></div></a>
+            <a class="action-btn" asp-page="/Portfolio" asp-route-mode="new"><div class="act-icon"><i class="bi bi-person-plus"></i></div><div><strong>Add New Student</strong><br /><small>Create a new student portfolio</small></div></a>
+            <a class="action-btn mb-0" asp-page="/StudentMaster"><div class="act-icon"><i class="bi bi-printer"></i></div><div><strong>Print / PDF Reports</strong><br /><small>Generate student portfolio reports</small></div></a>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="content-card">
+            <h5 class="card-title mb-3"><i class="bi bi-info-circle-fill me-2"></i>Quick Tips</h5>
+            <p class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> Track student growth all year</p>
+            <p class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> Print ready portfolio reports</p>
+            <p class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> Works on mobile and computer</p>
+            <p class="mb-0"><i class="bi bi-star-fill text-warning me-1"></i> Session 2026-27 is active</p>
+        </div>
+    </div>
+</div>
+

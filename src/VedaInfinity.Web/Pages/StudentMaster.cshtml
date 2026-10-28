@@ -1,0 +1,24 @@
+@page
+@model VedaInfinity.Web.Pages.StudentMasterModel
+@{
+    ViewData["Title"] = "Student Master";
+    ViewData["Menu"] = "students";
+}
+
+<div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-success" asp-page="/Portfolio" asp-route-mode="new"><i class="bi bi-plus-lg me-1"></i> Add New Student</a>
+</div>
+<div class="content-card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead><tr><th>Adm No</th><th>Student Name</th><th>Grade</th><th>Section</th><th>DOB</th><th>Status</th><th class="text-center">Actions</th></tr></thead>
+            <tbody>
+                <tr><td><strong>VIS-2026-001</strong></td><td>Aarav Sharma</td><td>5</td><td>A</td><td>2015-03-12</td><td><span class="badge bg-success">Completed</span></td><td class="text-center"><a class="btn btn-sm btn-outline-primary" asp-page="/Portfolio" asp-route-mode="view" asp-route-adm="VIS-2026-001"><i class="bi bi-eye"></i></a> <a class="btn btn-sm btn-outline-success" asp-page="/Portfolio" asp-route-mode="edit" asp-route-adm="VIS-2026-001"><i class="bi bi-pencil"></i></a></td></tr>
+                <tr><td><strong>VIS-2026-002</strong></td><td>Priya</td><td>7</td><td>B</td><td>2013-08-22</td><td><span class="badge bg-warning text-dark">Draft</span></td><td class="text-center"><a class="btn btn-sm btn-outline-primary" asp-page="/Portfolio" asp-route-mode="view" asp-route-adm="VIS-2026-002"><i class="bi bi-eye"></i></a> <a class="btn btn-sm btn-outline-success" asp-page="/Portfolio" asp-route-mode="edit" asp-route-adm="VIS-2026-002"><i class="bi bi-pencil"></i></a></td></tr>
+                <tr><td><strong>VIS-2026-003</strong></td><td>Rohan</td><td>9</td><td>A</td><td>2011-11-05</td><td><span class="badge bg-success">Completed</span></td><td class="text-center"><a class="btn btn-sm btn-outline-primary" asp-page="/Portfolio" asp-route-mode="view" asp-route-adm="VIS-2026-003"><i class="bi bi-eye"></i></a> <a class="btn btn-sm btn-outline-success" asp-page="/Portfolio" asp-route-mode="edit" asp-route-adm="VIS-2026-003"><i class="bi bi-pencil"></i></a></td></tr>
+                <tr><td><strong>VIS-2026-004</strong></td><td>Ananya Singh</td><td>4</td><td>C</td><td>2016-01-30</td><td><span class="badge bg-secondary">Pending</span></td><td class="text-center"><a class="btn btn-sm btn-outline-primary" asp-page="/Portfolio" asp-route-mode="view" asp-route-adm="VIS-2026-004"><i class="bi bi-eye"></i></a> <a class="btn btn-sm btn-outline-success" asp-page="/Portfolio" asp-route-mode="edit" asp-route-adm="VIS-2026-004"><i class="bi bi-pencil"></i></a></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

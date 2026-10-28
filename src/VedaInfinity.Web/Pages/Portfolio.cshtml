@@ -1,0 +1,570 @@
+@page
+@model VedaInfinity.Web.Pages.PortfolioModel
+@{
+    ViewData["Title"] = Model.PageTitle;
+    ViewData["Menu"] = "students";
+}
+<div class="container-fluid py-3 px-2 px-md-4">
+    <div class="portfolio-container">
+      <!-- Header -->
+      <div class="portfolio-header">
+        <div>
+          <h2><i class="bi bi-journal-bookmark-fill me-2"></i>STUDENT PORTFOLIO</h2>
+          <small>Session 2026-27 • Veda Infinity School</small>
+        </div>
+        <div class="d-flex gap-2 align-items-center">
+          <span class="badge bg-light text-dark" id="modeBadge">New Entry</span>
+          <button type="submit" asp-page-handler="Print" class="btn btn-sm btn-light" id="btnPrintPdf" formnovalidate title="Print / Download PDF Report">
+            <i class="bi bi-printer-fill me-1"></i> Print / PDF Report
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <ul class="nav nav-tabs nav-tabs-custom" id="portfolioTabs" role="tablist">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1" type="button">1. Student Info</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab2" type="button">2. Goals & Attendance</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab3" type="button">3. Behaviour & Academic</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab4" type="button">4. Activities</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab5" type="button">5. Sports & Photos</button></li>
+      </ul>
+
+      <form id="portfolioForm" method="post">
+        <div class="tab-content tab-content-custom" id="tabContent">
+
+          <!-- TAB 1: Student Info + Photo -->
+          <div class="tab-pane fade show active" id="tab1">
+            <div class="row g-4">
+              <div class="col-lg-8">
+                <h5 class="section-title"><i class="bi bi-person-vcard"></i> Student Details</h5>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Student Name *</label>
+                    <input type="text" class="form-control required-field" name="studentName" id="studentName" placeholder="Enter full name">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Grade *</label>
+                    <select class="form-select required-field" name="grade" id="grade" >
+                      <option value="">Select</option>
+                      <option value="1-5">Primary (1-5)</option>
+                      <option value="6-8">Middle (6-8)</option>
+                      <option value="9-10">Secondary (9-10)</option>
+                      <option value="11-12S">Senior (Science)</option>
+                      <option value="11-12C">Senior (Commerce)</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Section *</label>
+                    <input type="text" class="form-control required-field" name="section" id="section" placeholder="A / B / C">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Admission No. *</label>
+                    <input type="text" class="form-control required-field" name="admNo" id="admNo" placeholder="VIS-2026-XXX">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Date of Birth *</label>
+                    <input type="date" class="form-control required-field" name="dob" id="dob">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" name="address" id="address" placeholder="Full address">
+                  </div>
+                </div>
+
+                <h5 class="section-title mt-4"><i class="bi bi-people"></i> Parent / Guardian Details</h5>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Mother's Name</label>
+                    <input type="text" class="form-control" name="motherName" id="motherName">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Mother Mobile</label>
+                    <input type="tel" class="form-control" name="motherMobile" id="motherMobile">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Mother Email</label>
+                    <input type="email" class="form-control" name="motherEmail" id="motherEmail">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Father's Name</label>
+                    <input type="text" class="form-control" name="fatherName" id="fatherName">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Father Mobile</label>
+                    <input type="tel" class="form-control" name="fatherMobile" id="fatherMobile">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Father Email</label>
+                    <input type="email" class="form-control" name="fatherEmail" id="fatherEmail">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <h5 class="section-title"><i class="bi bi-camera"></i> Student Photo</h5>
+                <div class="photo-upload-box" onclick="document.getElementById('photoInput').click()">
+                  <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+                  <div id="photoPlaceholder">
+                    <i class="bi bi-cloud-upload fs-1 text-success"></i>
+                    <p class="mb-0 mt-2">Click to Upload<br><small>Student Photo</small></p>
+                  </div>
+                  <img id="photoPreview" class="photo-preview d-none" alt="Student Photo">
+                </div>
+                <p class="text-muted small mt-2 text-center">Recommended: Passport size, clear face photo</p>
+
+                <h5 class="section-title mt-4"><i class="bi bi-images"></i> Parents Photos</h5>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <div class="photo-upload-box" style="min-height:120px; padding:1rem; position:relative;" onclick="document.getElementById('motherPhoto').click()">
+                      <input type="file" id="motherPhoto" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'motherPreview', 'motherPlaceholder')">
+                      <div id="motherPlaceholder">
+                        <i class="bi bi-person fs-3 text-success"></i><br><small>Mother</small>
+                      </div>
+                      <img id="motherPreview" class="photo-preview d-none" style="max-width:90px;max-height:100px;border-radius:6px;object-fit:cover;">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="photo-upload-box" style="min-height:120px; padding:1rem; position:relative;" onclick="document.getElementById('fatherPhoto').click()">
+                      <input type="file" id="fatherPhoto" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'fatherPreview', 'fatherPlaceholder')">
+                      <div id="fatherPlaceholder">
+                        <i class="bi bi-person fs-3 text-success"></i><br><small>Father</small>
+                      </div>
+                      <img id="fatherPreview" class="photo-preview d-none" style="max-width:90px;max-height:100px;border-radius:6px;object-fit:cover;">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Goals & Attendance -->
+          <div class="tab-pane fade" id="tab2">
+            <div class="row g-4">
+              <div class="col-lg-6">
+                <h5 class="section-title"><i class="bi bi-heart"></i> Favourites</h5>
+                <div class="mb-3">
+                  <label class="form-label">My Favourite Activity</label>
+                  <input type="text" class="form-control" name="favActivity" id="favActivity">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">My Favourite Subject</label>
+                  <input type="text" class="form-control" name="favSubject" id="favSubject">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">My Favourite Sport</label>
+                  <input type="text" class="form-control" name="favSport" id="favSport">
+                </div>
+
+                <h5 class="section-title mt-4"><i class="bi bi-bullseye"></i> My Learning Goals</h5>
+                <p class="text-muted small">This year, I want to improve in:</p>
+                <div class="checkbox-group">
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Reading fluency" id="g1">
+                    <label class="form-check-label" for="g1">Reading fluency</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Handwriting" id="g2">
+                    <label class="form-check-label" for="g2">Handwriting</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Spoken English" id="g3">
+                    <label class="form-check-label" for="g3">Spoken English</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Vocabulary" id="g4">
+                    <label class="form-check-label" for="g4">Vocabulary</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Mathematics basics" id="g5">
+                    <label class="form-check-label" for="g5">Mathematics basics</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Logical thinking" id="g6">
+                    <label class="form-check-label" for="g6">Logical thinking</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Confidence" id="g7">
+                    <label class="form-check-label" for="g7">Confidence</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Discipline" id="g8">
+                    <label class="form-check-label" for="g8">Discipline</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Class participation" id="g9">
+                    <label class="form-check-label" for="g9">Class participation</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Creativity" id="g10">
+                    <label class="form-check-label" for="g10">Creativity</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="Teamwork" id="g11">
+                    <label class="form-check-label" for="g11">Teamwork</label>
+                  </div>
+                  <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="goals" value="General awareness" id="g12">
+                    <label class="form-check-label" for="g12">General awareness</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <h5 class="section-title"><i class="bi bi-pencil-square"></i> Goals & Expectations</h5>
+                <div class="mb-3">
+                  <label class="form-label">My Personal Goal</label>
+                  <textarea class="form-control" name="personalGoal" id="personalGoal" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Teacher's Learning Target for Student</label>
+                  <textarea class="form-control" name="teacherTarget" id="teacherTarget" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Parent's Expectations</label>
+                  <textarea class="form-control" name="parentExpect" id="parentExpect" rows="2"></textarea>
+                </div>
+
+                <h5 class="section-title mt-4"><i class="bi bi-calendar-check"></i> Attendance Record Session 2026-27</h5>
+                <div class="table-responsive">
+                  <table class="table table-bordered attendance-table">
+                    <thead class="table-success">
+                      <tr>
+                        <th>Month</th>
+                        <th>Attendance %</th>
+                        <th>Month</th>
+                        <th>Attendance %</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>April</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_apr" min="0" max="100"></td>
+                        <td>October</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_oct" min="0" max="100"></td>
+                      </tr>
+                      <tr>
+                        <td>May</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_may" min="0" max="100"></td>
+                        <td>November</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_nov" min="0" max="100"></td>
+                      </tr>
+                      <tr>
+                        <td>July</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_jul" min="0" max="100"></td>
+                        <td>December</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_dec" min="0" max="100"></td>
+                      </tr>
+                      <tr>
+                        <td>August</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_aug" min="0" max="100"></td>
+                        <td>January</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_jan" min="0" max="100"></td>
+                      </tr>
+                      <tr>
+                        <td>September</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_sep" min="0" max="100"></td>
+                        <td>February</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_feb" min="0" max="100"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2"></td>
+                        <td>March</td>
+                        <td><input type="number" class="form-control form-control-sm" name="att_mar" min="0" max="100"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Participation & Behaviour + Academic (unique items) -->
+          <div class="tab-pane fade" id="tab3">
+            <h5 class="section-title"><i class="bi bi-clipboard-check"></i> Participation & Behaviour Record</h5>
+            <p class="text-muted small mb-3">Select rating for each parameter (group radio buttons)</p>
+            
+            <div class="table-responsive mb-4">
+              <table class="rating-table">
+                <thead>
+                  <tr>
+                    <th>Parameter</th>
+                    <th>Excellent</th>
+                    <th>Good</th>
+                    <th>Need Improvement</th>
+                  </tr>
+                </thead>
+                <tbody id="behaviourBody">
+<tr><td>Class Participation</td><td><input type="radio" name="b_part" value="E" /></td><td><input type="radio" name="b_part" value="G" /></td><td><input type="radio" name="b_part" value="N" /></td></tr>
+<tr><td>Homework Completion</td><td><input type="radio" name="b_hw" value="E" /></td><td><input type="radio" name="b_hw" value="G" /></td><td><input type="radio" name="b_hw" value="N" /></td></tr>
+<tr><td>Discipline</td><td><input type="radio" name="b_dis" value="E" /></td><td><input type="radio" name="b_dis" value="G" /></td><td><input type="radio" name="b_dis" value="N" /></td></tr>
+<tr><td>Communication</td><td><input type="radio" name="b_com" value="E" /></td><td><input type="radio" name="b_com" value="G" /></td><td><input type="radio" name="b_com" value="N" /></td></tr>
+<tr><td>Confidence</td><td><input type="radio" name="b_conf" value="E" /></td><td><input type="radio" name="b_conf" value="G" /></td><td><input type="radio" name="b_conf" value="N" /></td></tr>
+<tr><td>Teamwork</td><td><input type="radio" name="b_team" value="E" /></td><td><input type="radio" name="b_team" value="G" /></td><td><input type="radio" name="b_team" value="N" /></td></tr>
+</tbody>
+              </table>
+            </div>
+
+            <h5 class="section-title"><i class="bi bi-book"></i> Academic Record</h5>
+            <p class="text-muted small">Subjects update based on selected Grade / Stream</p>
+            <div class="table-responsive">
+              <table class="rating-table">
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>Excellent</th>
+                    <th>Good</th>
+                    <th>Need Improvement</th>
+                  </tr>
+                </thead>
+                <tbody id="academicBody">
+<tr><td>English</td><td><input type="radio" name="a_eng" value="E" /></td><td><input type="radio" name="a_eng" value="G" /></td><td><input type="radio" name="a_eng" value="N" /></td></tr>
+<tr><td>Hindi</td><td><input type="radio" name="a_hin" value="E" /></td><td><input type="radio" name="a_hin" value="G" /></td><td><input type="radio" name="a_hin" value="N" /></td></tr>
+<tr><td>Mathematics</td><td><input type="radio" name="a_math" value="E" /></td><td><input type="radio" name="a_math" value="G" /></td><td><input type="radio" name="a_math" value="N" /></td></tr>
+<tr><td>Science / EVS</td><td><input type="radio" name="a_sci" value="E" /></td><td><input type="radio" name="a_sci" value="G" /></td><td><input type="radio" name="a_sci" value="N" /></td></tr>
+<tr><td>Social Studies</td><td><input type="radio" name="a_sst" value="E" /></td><td><input type="radio" name="a_sst" value="G" /></td><td><input type="radio" name="a_sst" value="N" /></td></tr>
+</tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 4: Activities -->
+          <div class="tab-pane fade" id="tab4">
+            <h5 class="section-title"><i class="bi bi-palette"></i> Activities Participated In</h5>
+            <div class="checkbox-group mb-4">
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Class Activity" id="a1">
+                <label class="form-check-label" for="a1">Class Activity</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Group Activity" id="a2">
+                <label class="form-check-label" for="a2">Group Activity</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Art & Craft" id="a3">
+                <label class="form-check-label" for="a3">Art & Craft</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Sports Activity" id="a4">
+                <label class="form-check-label" for="a4">Sports Activity</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Reading Activity" id="a5">
+                <label class="form-check-label" for="a5">Reading Activity</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Speaking Activity" id="a6">
+                <label class="form-check-label" for="a6">Speaking Activity</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="STEM / Science Activity" id="a7">
+                <label class="form-check-label" for="a7">STEM / Science Activity</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Music / Dance" id="a8">
+                <label class="form-check-label" for="a8">Music / Dance</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Yoga / Mindfulness" id="a9">
+                <label class="form-check-label" for="a9">Yoga / Mindfulness</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Festival / Special Day Celebration" id="a10">
+                <label class="form-check-label" for="a10">Festival / Special Day</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="activities" value="Vedic Activities" id="a11">
+                <label class="form-check-label" for="a11">Vedic Activities</label>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+              <div class="col-md-4">
+                <label class="form-label">Activity Name</label>
+                <input type="text" class="form-control" name="activityName" id="activityName">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Student's Role</label>
+                <input type="text" class="form-control" name="studentRole" id="studentRole">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Learning Outcome</label>
+                <input type="text" class="form-control" name="learningOutcome" id="learningOutcome">
+              </div>
+            </div>
+
+            <h5 class="section-title"><i class="bi bi-graph-up-arrow"></i> Improvement Areas & Plans</h5>
+            <div class="mb-3">
+              <label class="form-label">Academic Improvement Areas</label>
+              <textarea class="form-control" name="acadImprove" id="acadImprove" rows="2"></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Co-Scholastic / Discipline / Participation Improvement Areas</label>
+              <textarea class="form-control" name="coImprove" id="coImprove" rows="2"></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Any Other Specific Observation</label>
+              <textarea class="form-control" name="observation" id="observation" rows="2"></textarea>
+            </div>
+
+            <h6 class="mt-4 mb-2">Remedial & Improvement Plans for Next Month</h6>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead class="table-success">
+                  <tr>
+                    <th>Weak Areas</th>
+                    <th>Action to be Taken</th>
+                    <th>Improvement Status <small>(end of month)</small></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="text" class="form-control form-control-sm" name="weak1"></td>
+                    <td><input type="text" class="form-control form-control-sm" name="action1"></td>
+                    <td><input type="text" class="form-control form-control-sm" name="status1"></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="form-control form-control-sm" name="weak2"></td>
+                    <td><input type="text" class="form-control form-control-sm" name="action2"></td>
+                    <td><input type="text" class="form-control form-control-sm" name="status2"></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="form-control form-control-sm" name="weak3"></td>
+                    <td><input type="text" class="form-control form-control-sm" name="action3"></td>
+                    <td><input type="text" class="form-control form-control-sm" name="status3"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="row g-3 mt-3">
+              <div class="col-md-4">
+                <label class="form-label">Teacher's Signature</label>
+                <input type="text" class="form-control" name="teacherSign" placeholder="Type name / Sign">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Coordinator's Signature</label>
+                <input type="text" class="form-control" name="coordSign" placeholder="Type name / Sign">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Parent's Signature</label>
+                <input type="text" class="form-control" name="parentSign" placeholder="Type name / Sign">
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: Sports -->
+          <div class="tab-pane fade" id="tab5">
+            <h5 class="section-title"><i class="bi bi-trophy"></i> Sports Participation</h5>
+            <div class="row g-3 mb-4">
+              <div class="col-md-3">
+                <label class="form-label">Sport / Game</label>
+                <input type="text" class="form-control" name="sport" id="sport">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Level</label>
+                <select class="form-select" name="sportLevel">
+                  <option value="">Select</option>
+                  <option>Class</option>
+                  <option>School</option>
+                  <option>Inter-school</option>
+                  <option>District / State</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Position / Role</label>
+                <input type="text" class="form-control" name="sportPos">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Achievement</label>
+                <input type="text" class="form-control" name="sportAchieve">
+              </div>
+            </div>
+
+            <div class="checkbox-group mb-4">
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="sportRole" value="Regular Participant" id="sr1">
+                <label class="form-check-label" for="sr1">Regular Participant</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="sportRole" value="Team Player" id="sr2">
+                <label class="form-check-label" for="sr2">Team Player</label>
+              </div>
+              <div class="form-check form-check-custom">
+                <input class="form-check-input" type="checkbox" name="sportRole" value="Team Leader / Captain" id="sr3">
+                <label class="form-check-label" for="sr3">Team Leader / Captain</label>
+              </div>
+            </div>
+
+            <h5 class="section-title"><i class="bi bi-images"></i> Project / Activity / Sports Photos</h5>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="photo-upload-box" style="min-height:150px; position:relative;" onclick="document.getElementById('projPhoto1').click()">
+                  <input type="file" id="projPhoto1" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview1', 'projPlaceholder1')">
+                  <div id="projPlaceholder1">
+                    <i class="bi bi-image fs-2 text-success"></i><br><small>Upload Photo 1</small>
+                  </div>
+                  <img id="projPreview1" class="photo-preview d-none" style="max-width:140px;max-height:130px;border-radius:6px;object-fit:cover;">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="photo-upload-box" style="min-height:150px; position:relative;" onclick="document.getElementById('projPhoto2').click()">
+                  <input type="file" id="projPhoto2" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview2', 'projPlaceholder2')">
+                  <div id="projPlaceholder2">
+                    <i class="bi bi-image fs-2 text-success"></i><br><small>Upload Photo 2</small>
+                  </div>
+                  <img id="projPreview2" class="photo-preview d-none" style="max-width:140px;max-height:130px;border-radius:6px;object-fit:cover;">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="photo-upload-box" style="min-height:150px; position:relative;" onclick="document.getElementById('projPhoto3').click()">
+                  <input type="file" id="projPhoto3" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview3', 'projPlaceholder3')">
+                  <div id="projPlaceholder3">
+                    <i class="bi bi-image fs-2 text-success"></i><br><small>Upload Photo 3</small>
+                  </div>
+                  <img id="projPreview3" class="photo-preview d-none" style="max-width:140px;max-height:130px;border-radius:6px;object-fit:cover;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end tab-content -->
+
+        <!-- Footer Actions -->
+        <div class="footer-actions">
+          <div class="d-flex align-items-center gap-3">
+            <div class="progress-indicator">
+              Form Completion: <strong id="completionPct">0%</strong>
+            </div>
+            <div class="progress-bar-custom">
+              <div class="fill" id="progressFill" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" asp-page-handler="Draft" class="btn btn-draft"><i class="bi bi-save me-1"></i> Save as Draft</button>
+            <button type="submit" asp-page-handler="Save" class="btn btn-save" id="btnSave">
+              <i class="bi bi-check2-circle me-1"></i> Save Portfolio
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+@section Scripts {
+<script>
+function previewAnyPhoto(input, imgId, phId) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById(imgId);
+    img.src = e.target.result;
+    img.classList.remove('d-none');
+    const ph = document.getElementById(phId);
+    if (ph) ph.classList.add('d-none');
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+function previewPhoto(input) { previewAnyPhoto(input, 'photoPreview', 'photoPlaceholder'); }
+</script>
+}

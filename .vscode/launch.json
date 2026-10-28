@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    
+    {
+      "name": "VedaInfinity.Web",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build VedaInfinity.Web",
+      "program": "${workspaceFolder}\\src\\VedaInfinity.Web\\bin\\Debug\\net10.0\\VedaInfinity.Web.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}\\src\\VedaInfinity.Web",
+      "stopAtEntry": false,
+      "console": "integratedTerminal",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "https://localhost:7091;http://localhost:5091"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+        "uriFormat": "%s"
+      }
+    }
+  ]
+}
