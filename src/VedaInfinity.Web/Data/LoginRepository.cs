@@ -5,7 +5,7 @@ namespace VedaInfinity.Web.Data;
 
 public interface ILoginRepository
 {
-    Task<LoginUser?> GetByUserNameAsync(string userName);
+    Task<LoginUser?> GetByLoginIdentifierAsync(string identifier);
     Task UpdateLastLoginAsync(int userId);
 }
 
@@ -18,7 +18,7 @@ public class LoginRepository : ILoginRepository
         _db = db;
     }
 
-    public async Task<LoginUser?> GetByUserNameAsync(string userName)
+    public async Task<LoginUser?> GetByLoginIdentifierAsync(string identifier)
     {
         const string sql = @"
 SELECT
@@ -36,13 +36,15 @@ SELECT
     u.LastLoginDate
 FROM LoginMaster u
 INNER JOIN RoleMaster r ON r.RoleId = u.RoleId
-WHERE u.UserName = @UserName
+WHERE u.UserName = @Id
+   OR u.EmailId = @Id
+   OR u.MobileNo = @Id
 LIMIT 1;";
 
         await using var conn = _db.CreateConnection();
         await conn.OpenAsync();
         await using var cmd = new MySqlCommand(sql, conn);
-        cmd.Parameters.AddWithValue("@UserName", userName);
+        cmd.Parameters.AddWithValue("@Id", identifier.Trim());
 
         await using var reader = await cmd.ExecuteReaderAsync();
         if (!await reader.ReadAsync())

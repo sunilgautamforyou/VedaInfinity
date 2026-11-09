@@ -1,0 +1,393 @@
+@page
+@model VedaInfinity.Web.Pages.UserMasterModel
+@{
+    ViewData["Title"] = "User Master";
+    ViewData["Menu"] = "admin";
+    string Js(string? value) => (value ?? string.Empty).Replace("\\", "\\\\").Replace("'", "\\'");
+    var roleMap = Model.Roles.ToDictionary(r => r.RoleId, r => r.RoleCode);
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <p class="text-muted mb-0">Manage login accounts, roles and access for school staff and users.</p>
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#searchModal">
+            <i class="bi bi-search me-1"></i> Search Users
+        </button>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openCreateUser()">
+            <i class="bi bi-person-plus me-1"></i> Add New User
+        </button>
+    </div>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.FilterUserName) || !string.IsNullOrWhiteSpace(Model.FilterEmail)
+     || !string.IsNullOrWhiteSpace(Model.FilterDisplayName) || !string.IsNullOrWhiteSpace(Model.FilterMobile))
+{
+    <div class="alert alert-info py-2 d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <span>
+            <i class="bi bi-funnel me-1"></i>
+            Active filter —
+            @if (!string.IsNullOrWhiteSpace(Model.FilterUserName)) { <span class="me-2">User: <strong>@Model.FilterUserName</strong></span> }
+            @if (!string.IsNullOrWhiteSpace(Model.FilterEmail)) { <span class="me-2">Email: <strong>@Model.FilterEmail</strong></span> }
+            @if (!string.IsNullOrWhiteSpace(Model.FilterDisplayName)) { <span class="me-2">Name: <strong>@Model.FilterDisplayName</strong></span> }
+            @if (!string.IsNullOrWhiteSpace(Model.FilterMobile)) { <span class="me-2">Mobile: <strong>@Model.FilterMobile</strong></span> }
+        </span>
+        <a class="btn btn-sm btn-outline-secondary" asp-page="/UserMaster">Clear</a>
+    </div>
+}
+
+<div class="content-card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Display Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Mobile</th>
+                    <th>Expiry</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (Model.Users.Count == 0)
+            {
+                <tr>
+                    <td colspan="9" class="text-center text-muted py-4">No users found.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var u in Model.Users)
+                {
+                    <tr>
+                        <td><strong>@u.UserName</strong></td>
+                        <td>@(u.DisplayName ?? "-")</td>
+                        <td>@u.EmailId</td>
+                        <td><span class="badge bg-success">@u.RoleName</span></td>
+                        <td>@(u.MobileNo ?? "-")</td>
+                        <td>@(u.ExpiryDate?.ToString("dd-MMM-yyyy") ?? "Never")</td>
+                        <td>
+                            @if (u.IsActive)
+                            {
+                                <span class="badge bg-primary">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                        </td>
+                        <td>@(u.LastLoginDate?.ToString("dd-MMM-yyyy HH:mm") ?? "-")</td>
+                        <td class="text-center text-nowrap">
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-success"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#userModal"
+                                    onclick="openEditUser(@u.UserId, '@Js(u.UserName)', '@Js(u.EmailId)', @u.RoleId, '@Js(u.DisplayName)', '@Js(u.MobileNo)', '@(u.ExpiryDate?.ToString("yyyy-MM-dd") ?? "")', @(u.IsActive ? "true" : "false"))">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <form method="post" asp-page-handler="ToggleActive" class="d-inline">
+                                <input type="hidden" name="userId" value="@u.UserId" />
+                                <input type="hidden" name="isActive" value="@(!u.IsActive)" />
+                                <input type="hidden" name="page" value="@Model.PageNumber" />
+                                <input type="hidden" name="FilterUserName" value="@Model.FilterUserName" />
+                                <input type="hidden" name="FilterEmail" value="@Model.FilterEmail" />
+                                <input type="hidden" name="FilterDisplayName" value="@Model.FilterDisplayName" />
+                                <input type="hidden" name="FilterMobile" value="@Model.FilterMobile" />
+                                <button type="submit" class="btn btn-sm btn-outline-secondary" title="@(u.IsActive ? "Deactivate" : "Activate")">
+                                    <i class="bi bi-@(u.IsActive ? "pause" : "play")-circle"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 px-1">
+        <small class="text-muted">
+            Showing @(Model.Users.Count == 0 ? 0 : ((Model.PageNumber - 1) * Model.PageSize + 1))
+            – @((Model.PageNumber - 1) * Model.PageSize + Model.Users.Count)
+            of @Model.TotalCount
+        </small>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-page="/UserMaster"
+                       asp-route-page="@(Model.PageNumber - 1)"
+                       asp-route-FilterUserName="@Model.FilterUserName"
+                       asp-route-FilterEmail="@Model.FilterEmail"
+                       asp-route-FilterDisplayName="@Model.FilterDisplayName"
+                       asp-route-FilterMobile="@Model.FilterMobile">Prev</a>
+                </li>
+                @for (var p = 1; p <= Model.TotalPages && p <= 10; p++)
+                {
+                    <li class="page-item @(p == Model.PageNumber ? "active" : "")">
+                        <a class="page-link"
+                           asp-page="/UserMaster"
+                           asp-route-page="@p"
+                           asp-route-FilterUserName="@Model.FilterUserName"
+                           asp-route-FilterEmail="@Model.FilterEmail"
+                           asp-route-FilterDisplayName="@Model.FilterDisplayName"
+                           asp-route-FilterMobile="@Model.FilterMobile">@p</a>
+                    </li>
+                }
+                <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-page="/UserMaster"
+                       asp-route-page="@(Model.PageNumber + 1)"
+                       asp-route-FilterUserName="@Model.FilterUserName"
+                       asp-route-FilterEmail="@Model.FilterEmail"
+                       asp-route-FilterDisplayName="@Model.FilterDisplayName"
+                       asp-route-FilterMobile="@Model.FilterMobile">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Search modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="get">
+                <div class="modal-header" style="background:#0a3d28;color:#fff;">
+                    <h5 class="modal-title"><i class="bi bi-search me-1"></i> Search Users</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">Enter any one or more fields. Matching records will be listed with pagination.</p>
+                    <div class="mb-3">
+                        <label class="form-label">User Name</label>
+                        <input type="text" name="FilterUserName" value="@Model.FilterUserName" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Id</label>
+                        <input type="text" name="FilterEmail" value="@Model.FilterEmail" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Display Name</label>
+                        <input type="text" name="FilterDisplayName" value="@Model.FilterDisplayName" class="form-control" />
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label">Mobile No</label>
+                        <input type="text" name="FilterMobile" value="@Model.FilterMobile" class="form-control" />
+                    </div>
+                    <input type="hidden" name="page" value="1" />
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-outline-secondary" asp-page="/UserMaster">Clear</a>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-search me-1"></i> Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add / Edit User Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Save">
+                <input type="hidden" name="page" value="@Model.PageNumber" />
+                <input type="hidden" name="FilterUserName" value="@Model.FilterUserName" />
+                <input type="hidden" name="FilterEmail" value="@Model.FilterEmail" />
+                <input type="hidden" name="FilterDisplayName" value="@Model.FilterDisplayName" />
+                <input type="hidden" name="FilterMobile" value="@Model.FilterMobile" />
+                <div class="modal-header" style="background:#0a3d28;color:#fff;">
+                    <h5 class="modal-title" id="userModalTitle">Add New User</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="userModalError" class="alert alert-danger py-2 @(string.IsNullOrEmpty(Model.ErrorMessage) ? "d-none" : "")">
+                        @(Model.ErrorMessage ?? "")
+                    </div>
+                    <div id="userModalSuccess" class="alert alert-success py-2 @(Model.SaveSucceeded ? "" : "d-none")">
+                        <i class="bi bi-check-circle-fill me-1"></i>@(Model.SuccessPopupMessage ?? "Saved successfully.")
+                    </div>
+                    <input type="hidden" asp-for="Input.UserId" id="Input_UserId" />
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Role *</label>
+                            <select asp-for="Input.RoleId" asp-items="Model.RoleOptions" class="form-select" id="Input_RoleId" required onchange="maybeGenerateUserName()">
+                                <option value="0">Select role</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Display Name *</label>
+                            <input asp-for="Input.DisplayName" class="form-control" id="Input_DisplayName" required oninput="maybeGenerateUserName()" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mobile No *</label>
+                            <input asp-for="Input.MobileNo" class="form-control" id="Input_MobileNo" required maxlength="10" pattern="[0-9]{10}" placeholder="10-digit mobile" oninput="maybeGenerateUserName()" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email Id *</label>
+                            <input asp-for="Input.EmailId" type="email" class="form-control" id="Input_EmailId" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">User Name *</label>
+                            <input asp-for="Input.UserName" class="form-control" id="Input_UserName" required />
+                            <small class="text-muted" id="userNameHelp">Auto-generated from Role + Display Name + Mobile (editable)</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Password <span id="pwdHint" class="text-muted small">(required for new user)</span></label>
+                            <input asp-for="Input.Password" type="password" class="form-control" id="Input_Password" autocomplete="new-password" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Expiry Date</label>
+                            <input asp-for="Input.ExpiryDate" type="date" class="form-control" id="Input_ExpiryDate" />
+                            <small class="text-muted">Leave blank for never expires</small>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="form-check mt-3">
+                                <input asp-for="Input.IsActive" class="form-check-input" id="Input_IsActive" />
+                                <label class="form-check-label" for="Input_IsActive">Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-save me-1"></i> Save User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    ['userModal', 'searchModal'].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el && el.parentElement !== document.body) {
+            document.body.appendChild(el);
+        }
+    });
+});
+
+const roleCodeMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(roleMap));
+
+function setUserFormEnabled(enabled) {
+    const modalEl = document.getElementById('userModal');
+    if (!modalEl) return;
+    modalEl.querySelectorAll('input:not([type="hidden"]), select, textarea, button').forEach(el => {
+        el.disabled = !enabled;
+    });
+    // Always allow dismiss controls
+    modalEl.querySelectorAll('[data-bs-dismiss="modal"], .btn-close').forEach(el => { el.disabled = false; });
+}
+
+function clearUserModalError() {
+    const box = document.getElementById('userModalError');
+    if (box) {
+        box.classList.add('d-none');
+        box.textContent = '';
+    }
+}
+
+function openCreateUser() {
+    clearUserModalError();
+    setUserFormEnabled(true);
+    document.getElementById('userModalSuccess')?.classList.add('d-none');
+    document.getElementById('userModalTitle').textContent = 'Add New User';
+    document.getElementById('Input_UserId').value = '0';
+    document.getElementById('Input_UserName').value = '';
+    document.getElementById('Input_UserName').readOnly = false;
+    document.getElementById('Input_EmailId').value = '';
+    document.getElementById('Input_Password').value = '';
+    document.getElementById('Input_RoleId').value = '0';
+    document.getElementById('Input_DisplayName').value = '';
+    document.getElementById('Input_MobileNo').value = '';
+    document.getElementById('Input_ExpiryDate').value = '';
+    document.getElementById('Input_IsActive').checked = true;
+    document.getElementById('pwdHint').textContent = '(required for new user)';
+    document.getElementById('userNameHelp').textContent = 'Auto-generated from Role + Display Name + Mobile (editable)';
+}
+
+function openEditUser(id, userName, email, roleId, displayName, mobile, expiry, isActive) {
+    clearUserModalError();
+    setUserFormEnabled(true);
+    document.getElementById('userModalSuccess')?.classList.add('d-none');
+    document.getElementById('userModalTitle').textContent = 'Edit User';
+    document.getElementById('Input_UserId').value = id;
+    document.getElementById('Input_UserName').value = userName;
+    document.getElementById('Input_UserName').readOnly = true;
+    document.getElementById('Input_EmailId').value = email;
+    document.getElementById('Input_Password').value = '';
+    document.getElementById('Input_RoleId').value = roleId;
+    document.getElementById('Input_DisplayName').value = displayName || '';
+    document.getElementById('Input_MobileNo').value = mobile || '';
+    document.getElementById('Input_ExpiryDate').value = expiry || '';
+    document.getElementById('Input_IsActive').checked = !!isActive;
+    document.getElementById('pwdHint').textContent = '(leave blank to keep current password)';
+    document.getElementById('userNameHelp').textContent = 'User Name cannot be changed in edit mode';
+}
+
+function cleanPart(text) {
+    return (text || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+function maybeGenerateUserName() {
+    const userId = document.getElementById('Input_UserId').value || '0';
+    if (userId !== '0') return; // do not change username in edit mode
+
+    const roleId = document.getElementById('Input_RoleId').value;
+    const displayName = document.getElementById('Input_DisplayName').value || '';
+    const mobile = (document.getElementById('Input_MobileNo').value || '').replace(/\D/g, '');
+    if (!roleId || roleId === '0' || !displayName.trim() || mobile.length < 4) {
+        return;
+    }
+
+    const roleCode = (roleCodeMap[roleId] || roleCodeMap[String(roleId)] || 'USR').toString();
+    const rolePart = cleanPart(roleCode).substring(0, 3) || 'USR';
+    const namePart = cleanPart(displayName.split(/\s+/)[0] || displayName).substring(0, 8) || 'USER';
+    const mobilePart = mobile.slice(-4);
+    document.getElementById('Input_UserName').value = rolePart + '.' + namePart + '.' + mobilePart;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const keepOpen = @(Model.KeepModalOpen ? "true" : "false");
+    const saveSucceeded = @(Model.SaveSucceeded ? "true" : "false");
+    if (!keepOpen) return;
+
+    const modalEl = document.getElementById('userModal');
+    if (!modalEl || !window.bootstrap) return;
+    // Avoid sticky header stacking context trapping the modal
+    if (modalEl.parentElement !== document.body) {
+        document.body.appendChild(modalEl);
+    }
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+
+    if (saveSucceeded) {
+        // Success shown inside entry modal; then close and refresh list without list-page banner
+        setUserFormEnabled(false);
+        setTimeout(function () {
+            modal.hide();
+            const url = new URL(window.location.href);
+            url.searchParams.delete('handler');
+            window.location.href = url.pathname + url.search;
+        }, 1500);
+        return;
+    }
+
+    const userId = document.getElementById('Input_UserId')?.value || '0';
+    const isNew = (userId === '0' || userId === '');
+    document.getElementById('userModalTitle').textContent = isNew ? 'Add New User' : 'Edit User';
+    document.getElementById('Input_UserName').readOnly = !isNew;
+    document.getElementById('pwdHint').textContent = isNew
+        ? '(required for new user)'
+        : '(leave blank to keep current password)';
+    document.getElementById('userNameHelp').textContent = isNew
+        ? 'Auto-generated from Role + Display Name + Mobile (editable)'
+        : 'User Name cannot be changed in edit mode';
+});
+</script>
+}

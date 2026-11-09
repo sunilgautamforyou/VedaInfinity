@@ -52,11 +52,36 @@ body.app-body {
 .submenu .sub-link { padding: 0.5rem 0.9rem 0.5rem 2.2rem !important; font-size: 0.82rem !important; }
 .main-content { margin-left: calc(var(--sidebar-width) + 20px); min-height: calc(100vh - 32px); }
 .top-header {
-  background: #fff; border-radius: 16px; padding: 0.75rem 1.3rem;
-  display: flex; align-items: center; justify-content: space-between;
-  box-shadow: 0 2px 12px rgba(10,61,40,0.05); margin-bottom: 18px;
-  position: sticky; top: 16px; z-index: 100;
+  background: #fff;
+  border-radius: 16px;
+  padding: 0.75rem 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 16px rgba(10,61,40,0.10);
+  margin-bottom: 0;
+  /* fixed within viewport but below Bootstrap modal (1055) and above page content */
+  position: sticky;
+  top: 16px;
+  z-index: 1020;
 }
+/* Spacer so table/content never slides underneath the sticky header */
+.main-content .content-area {
+  position: relative;
+  z-index: auto;
+  padding-top: 12px;
+  margin-top: 6px;
+}
+/* Keep page cards/tables under the header while scrolling */
+.main-content .content-area .content-card,
+.main-content .content-area .table-responsive {
+  position: relative;
+  z-index: 1;
+}
+/* Bootstrap modal must sit above sticky header */
+.modal { z-index: 1060 !important; }
+.modal-backdrop { z-index: 1055 !important; }
+
 .page-title-inline { font-size: 1.3rem; font-weight: 700; color: #1a2e25; margin: 0; }
 .header-actions { display: flex; align-items: center; gap: 12px; }
 .search-box { position: relative; width: 260px; }

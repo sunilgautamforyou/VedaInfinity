@@ -5,7 +5,7 @@ namespace VedaInfinity.Web.Services;
 
 public interface IAuthService
 {
-    Task<(bool Success, LoginUser? User, string? Error)> ValidateLoginAsync(string userName, string password);
+    Task<(bool Success, LoginUser? User, string? Error)> ValidateLoginAsync(string loginId, string password);
 }
 
 public class AuthService : IAuthService
@@ -17,14 +17,14 @@ public class AuthService : IAuthService
         _loginRepository = loginRepository;
     }
 
-    public async Task<(bool Success, LoginUser? User, string? Error)> ValidateLoginAsync(string userName, string password)
+    public async Task<(bool Success, LoginUser? User, string? Error)> ValidateLoginAsync(string loginId, string password)
     {
-        if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
-            return (false, null, "Username and password are required.");
+        if (string.IsNullOrWhiteSpace(loginId) || string.IsNullOrWhiteSpace(password))
+            return (false, null, "Login id and password are required.");
 
-        var user = await _loginRepository.GetByUserNameAsync(userName.Trim());
+        var user = await _loginRepository.GetByLoginIdentifierAsync(loginId.Trim());
         if (user is null)
-            return (false, null, "Invalid username or password.");
+            return (false, null, "Invalid login credentials.");
 
         if (!user.IsActive)
             return (false, null, "This account is inactive. Contact the school administrator.");
@@ -33,7 +33,7 @@ public class AuthService : IAuthService
             return (false, null, "This account has expired. Contact the school administrator.");
 
         if (!PasswordHasher.VerifySha1(password, user.PasswordHash))
-            return (false, null, "Invalid username or password.");
+            return (false, null, "Invalid login credentials.");
 
         await _loginRepository.UpdateLastLoginAsync(user.UserId);
         return (true, user, null);
