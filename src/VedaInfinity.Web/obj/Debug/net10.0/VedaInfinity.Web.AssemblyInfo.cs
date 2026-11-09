@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VedaInfinity.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7933ea23b68b1eb098c453144cf12a582381e9d1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b5282711ad7422513baec67cdcbc59299b7b692b")]
 [assembly: System.Reflection.AssemblyProductAttribute("VedaInfinity.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VedaInfinity.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
