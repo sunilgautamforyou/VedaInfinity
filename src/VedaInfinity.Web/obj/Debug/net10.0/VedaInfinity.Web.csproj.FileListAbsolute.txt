@@ -15,6 +15,7 @@ C:\WorkingDir\Data\Coding\Veda\code\VedaInfinity\src\VedaInfinity.Web\obj\Debug\
 C:\WorkingDir\Data\Coding\Veda\code\VedaInfinity\src\VedaInfinity.Web\obj\Debug\net10.0\VedaInfinity.Web.MvcApplicationPartsAssemblyInfo.cache
 C:\WorkingDir\Data\Coding\Veda\code\VedaInfinity\src\VedaInfinity.Web\obj\Debug\net10.0\VedaInfinity.Web.RazorAssemblyInfo.cache
 C:\WorkingDir\Data\Coding\Veda\code\VedaInfinity\src\VedaInfinity.Web\obj\Debug\net10.0\VedaInfinity.Web.RazorAssemblyInfo.cs
+C:\WorkingDir\Data\Coding\Veda\code\VedaInfinity\src\VedaInfinity.Web\obj\Debug\net10.0\VedaInfinity.Web.sourcelink.json
 C:\WorkingDir\Data\Coding\Veda\code\VedaInfinity\src\VedaInfinity.Web\obj\Debug\net10.0\rjimswa.dswa.cache.json
 C:\WorkingDir\Data\Coding\Veda\code\VedaInfinity\src\VedaInfinity.Web\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\WorkingDir\Data\Coding\Veda\code\VedaInfinity\src\VedaInfinity.Web\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json

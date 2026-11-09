@@ -42,32 +42,36 @@
                     <label class="form-label">Student Name *</label>
                     <input type="text" class="form-control required-field" name="studentName" id="studentName" placeholder="Enter full name">
                   </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Grade *</label>
-                    <select class="form-select required-field" name="grade" id="grade" >
+                  <div class="col-md-6">
+                    <label class="form-label">Grade / Section *</label>
+                    <select class="form-select required-field" name="grade" id="grade">
                       <option value="">Select</option>
-                      <option value="1-5">Primary (1-5)</option>
-                      <option value="6-8">Middle (6-8)</option>
-                      <option value="9-10">Secondary (9-10)</option>
-                      <option value="11-12S">Senior (Science)</option>
-                      <option value="11-12C">Senior (Commerce)</option>
+                      <option value="Primary (1-5) - A">Primary (1-5) - A</option>
+                      <option value="Primary (1-5) - B">Primary (1-5) - B</option>
+                      <option value="Primary (1-5) - C">Primary (1-5) - C</option>
+                      <option value="Middle (6-8) - A">Middle (6-8) - A</option>
+                      <option value="Middle (6-8) - B">Middle (6-8) - B</option>
+                      <option value="Middle (6-8) - C">Middle (6-8) - C</option>
+                      <option value="Secondary (9-10) - A">Secondary (9-10) - A</option>
+                      <option value="Secondary (9-10) - B">Secondary (9-10) - B</option>
+                      <option value="Secondary (9-10) - C">Secondary (9-10) - C</option>
+                      <option value="Senior (Science) - A">Senior (Science) - A</option>
+                      <option value="Senior (Science) - B">Senior (Science) - B</option>
+                      <option value="Senior (Commerce) - A">Senior (Commerce) - A</option>
+                      <option value="Senior (Commerce) - B">Senior (Commerce) - B</option>
                     </select>
                   </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Section *</label>
-                    <input type="text" class="form-control required-field" name="section" id="section" placeholder="A / B / C">
-                  </div>
-                  <div class="col-md-4">
+                  <div class="col-md-6">
                     <label class="form-label">Admission No. *</label>
                     <input type="text" class="form-control required-field" name="admNo" id="admNo" placeholder="VIS-2026-XXX">
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-6">
                     <label class="form-label">Date of Birth *</label>
                     <input type="date" class="form-control required-field" name="dob" id="dob">
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-12">
                     <label class="form-label">Address</label>
-                    <input type="text" class="form-control" name="address" id="address" placeholder="Full address">
+                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="House / Flat, Street, Area, City, State, PIN"></textarea>
                   </div>
                 </div>
 
@@ -496,34 +500,67 @@
             </div>
 
             <h5 class="section-title"><i class="bi bi-images"></i> Project / Activity / Sports Photos</h5>
-            <div class="row g-3">
-              <div class="col-md-4">
+            <div class="row g-3" id="projectPhotoGrid">
+              <div class="col-md-4 project-photo-slot" data-slot="1">
                 <div class="photo-upload-box" style="min-height:150px; position:relative;" onclick="document.getElementById('projPhoto1').click()">
-                  <input type="file" id="projPhoto1" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview1', 'projPlaceholder1')">
+                  <input type="file" id="projPhoto1" name="projPhoto1" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview1', 'projPlaceholder1')">
                   <div id="projPlaceholder1">
                     <i class="bi bi-image fs-2 text-success"></i><br><small>Upload Photo 1</small>
                   </div>
                   <img id="projPreview1" class="photo-preview d-none" style="max-width:140px;max-height:130px;border-radius:6px;object-fit:cover;">
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 project-photo-slot" data-slot="2">
                 <div class="photo-upload-box" style="min-height:150px; position:relative;" onclick="document.getElementById('projPhoto2').click()">
-                  <input type="file" id="projPhoto2" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview2', 'projPlaceholder2')">
+                  <input type="file" id="projPhoto2" name="projPhoto2" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview2', 'projPlaceholder2')">
                   <div id="projPlaceholder2">
                     <i class="bi bi-image fs-2 text-success"></i><br><small>Upload Photo 2</small>
                   </div>
                   <img id="projPreview2" class="photo-preview d-none" style="max-width:140px;max-height:130px;border-radius:6px;object-fit:cover;">
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 project-photo-slot" data-slot="3">
                 <div class="photo-upload-box" style="min-height:150px; position:relative;" onclick="document.getElementById('projPhoto3').click()">
-                  <input type="file" id="projPhoto3" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview3', 'projPlaceholder3')">
+                  <input type="file" id="projPhoto3" name="projPhoto3" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview3', 'projPlaceholder3')">
                   <div id="projPlaceholder3">
                     <i class="bi bi-image fs-2 text-success"></i><br><small>Upload Photo 3</small>
                   </div>
                   <img id="projPreview3" class="photo-preview d-none" style="max-width:140px;max-height:130px;border-radius:6px;object-fit:cover;">
                 </div>
               </div>
+              <div class="col-md-4 project-photo-slot d-none" data-slot="4">
+                <div class="photo-upload-box" style="min-height:150px; position:relative;" onclick="document.getElementById('projPhoto4').click()">
+                  <input type="file" id="projPhoto4" name="projPhoto4" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview4', 'projPlaceholder4')">
+                  <div id="projPlaceholder4">
+                    <i class="bi bi-image fs-2 text-success"></i><br><small>Upload Photo 4</small>
+                  </div>
+                  <img id="projPreview4" class="photo-preview d-none" style="max-width:140px;max-height:130px;border-radius:6px;object-fit:cover;">
+                </div>
+              </div>
+              <div class="col-md-4 project-photo-slot d-none" data-slot="5">
+                <div class="photo-upload-box" style="min-height:150px; position:relative;" onclick="document.getElementById('projPhoto5').click()">
+                  <input type="file" id="projPhoto5" name="projPhoto5" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview5', 'projPlaceholder5')">
+                  <div id="projPlaceholder5">
+                    <i class="bi bi-image fs-2 text-success"></i><br><small>Upload Photo 5</small>
+                  </div>
+                  <img id="projPreview5" class="photo-preview d-none" style="max-width:140px;max-height:130px;border-radius:6px;object-fit:cover;">
+                </div>
+              </div>
+              <div class="col-md-4 project-photo-slot d-none" data-slot="6">
+                <div class="photo-upload-box" style="min-height:150px; position:relative;" onclick="document.getElementById('projPhoto6').click()">
+                  <input type="file" id="projPhoto6" name="projPhoto6" accept="image/*" style="display:none" onchange="previewAnyPhoto(this, 'projPreview6', 'projPlaceholder6')">
+                  <div id="projPlaceholder6">
+                    <i class="bi bi-image fs-2 text-success"></i><br><small>Upload Photo 6</small>
+                  </div>
+                  <img id="projPreview6" class="photo-preview d-none" style="max-width:140px;max-height:130px;border-radius:6px;object-fit:cover;">
+                </div>
+              </div>
+            </div>
+            <div class="mt-3">
+              <button type="button" class="btn btn-outline-success btn-sm" id="btnAddMorePhotos" onclick="addMoreProjectPhotos()">
+                <i class="bi bi-plus-circle me-1"></i> Add more photos
+              </button>
+              <small class="text-muted ms-2">You can upload up to 6 photos</small>
             </div>
           </div>
 
@@ -566,5 +603,26 @@ function previewAnyPhoto(input, imgId, phId) {
   reader.readAsDataURL(input.files[0]);
 }
 function previewPhoto(input) { previewAnyPhoto(input, 'photoPreview', 'photoPlaceholder'); }
+
+function addMoreProjectPhotos() {
+  const hiddenSlots = document.querySelectorAll('#projectPhotoGrid .project-photo-slot.d-none');
+  if (hiddenSlots.length === 0) {
+    const btn = document.getElementById('btnAddMorePhotos');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Maximum 6 photos';
+    }
+    return;
+  }
+  // Reveal next 1 slot at a time
+  hiddenSlots[0].classList.remove('d-none');
+  if (document.querySelectorAll('#projectPhotoGrid .project-photo-slot.d-none').length === 0) {
+    const btn = document.getElementById('btnAddMorePhotos');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Maximum 6 photos';
+    }
+  }
+}
 </script>
 }
