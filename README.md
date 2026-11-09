@@ -1,7 +1,27 @@
 # Veda Infinity School — ASP.NET Core (.NET 10)
 
 Razor Pages website converted from the approved HTML design.
-Page models contain empty methods (`// TODO`) except a temporary admin/admin login so you can open the site.
+
+## Local database setup
+
+The web project connects to the local `veda_infinity` MySQL database. In MySQL
+Workbench, create a dedicated account for the app (rather than using `root`):
+
+```sql
+CREATE USER 'veda_app'@'localhost' IDENTIFIED BY '<choose-a-new-strong-password>';
+GRANT SELECT, UPDATE ON veda_infinity.LoginMaster TO 'veda_app'@'localhost';
+GRANT SELECT ON veda_infinity.RoleMaster TO 'veda_app'@'localhost';
+```
+
+Configure its password with .NET user-secrets; do not put credentials in
+`appsettings.json`:
+
+```powershell
+dotnet user-secrets set "ConnectionStrings:DefaultConnectionPassword" "<the-veda_app-password>" --project src\VedaInfinity.Web\VedaInfinity.Web.csproj
+```
+
+In deployed environments, set the `ConnectionStrings__DefaultConnectionPassword`
+environment variable instead. The local connection requires TLS.
 
 ## Open in Visual Studio
 
@@ -13,7 +33,7 @@ Page models contain empty methods (`// TODO`) except a temporary admin/admin log
 6. If Visual Studio asks to trust the project, choose Trust.
 7. Set startup project to **VedaInfinity.Web** if it is not already.
 8. Press **F5** (or the green play button). The browser opens the login page.
-9. Sign in with **admin / admin**.
+9. Sign in with a valid user from the configured database.
 
 ## Pages
 
@@ -33,4 +53,4 @@ Shared menu and header: `Pages/Shared/_Layout.cshtml`.
 
 ## Next coding step
 
-Open the `.cshtml.cs` file for the page you want and replace the `TODO` methods. No database is connected yet.
+Open the `.cshtml.cs` file for the page you want and replace the remaining `TODO` methods.
